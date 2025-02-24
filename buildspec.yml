@@ -4,12 +4,12 @@ phases:
   pre_build:
     commands:
       - echo "Recuperando credenciais do Docker Hub do Secrets Manager..."
-      - SECRET_VALUE="$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-1:272322677686:secret:secret-dockerhub-anTWil --query SecretString --output text)"
+      - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-1:272322677686:secret:secret-dockerhub-anTWil --query SecretString --output text)
       - echo "Valor do segredo: $SECRET_VALUE"
-      - DOCKERHUB_USERNAME="$(echo $SECRET_VALUE | jq -r '.DOCKERHUB_USERNAME')"
-      - DOCKERHUB_PASSWORD="$(echo $SECRET_VALUE | jq -r '.DOCKERHUB_PASSWORD')"
+      - DOCKERHUB_USERNAME=$(echo "$SECRET_VALUE" | jq -r '.DOCKERHUB_USERNAME')
+      - DOCKERHUB_PASSWORD=$(echo "$SECRET_VALUE" | jq -r '.DOCKERHUB_PASSWORD')
       - echo "DOCKERHUB_USERNAME carregado: $DOCKERHUB_USERNAME"
-      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin || exit 1
 
   build:
     commands:
