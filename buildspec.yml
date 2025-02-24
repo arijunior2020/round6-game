@@ -5,14 +5,16 @@ phases:
     commands:
       - echo "Autenticando no Amazon ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 272322677686.dkr.ecr.us-east-1.amazonaws.com
-      - echo "Autenticando no Docker Hub..."
-      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-
+      
   build:
     commands:
       - echo "Construindo a imagem Docker..."
       - docker build -t round6-game .
-      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game:latest
+      - echo "Nomeando corretamente a imagem..."
+      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
+      - echo "Verificando imagens locais..."
+      - docker images
+
   post_build:
     commands:
       - echo "Enviando imagem para o Amazon ECR..."
@@ -20,4 +22,5 @@ phases:
       - echo "Build concluído!"
 
 artifacts:
-  files: '**/*'
+  files:
+    - '**/*'
