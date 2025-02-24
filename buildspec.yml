@@ -3,27 +3,21 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo "Recuperando credenciais do Docker Hub do Secrets Manager..."
-      - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-1:272322677686:secret:secret-dockerhub-anTWil --query SecretString --output text || echo "{}")
-      - echo "DEBUG: Valor do segredo bruto = $SECRET_VALUE"
-      - DOCKERHUB_USERNAME=$(echo "$SECRET_VALUE" | jq -r '.DOCKERHUB_USERNAME')
-      - DOCKERHUB_PASSWORD=$(echo "$SECRET_VALUE" | jq -r '.DOCKERHUB_PASSWORD')
-      - echo "DEBUG: DOCKERHUB_USERNAME = $DOCKERHUB_USERNAME"
+      - echo "Autenticando no Amazon ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 272322677686.dkr.ecr.us-east-1.amazonaws.com
       - echo "Autenticando no Docker Hub..."
-      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin || exit 1
+      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
   build:
     commands:
       - echo "Construindo a imagem Docker..."
       - docker build -t round6-game .
-      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
-
+      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game:latest
   post_build:
     commands:
       - echo "Enviando imagem para o Amazon ECR..."
-      - docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
+      - docker push docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
       - echo "Build concluído!"
 
 artifacts:
-  files:
-    - '**/*'
+  files: '**/*'
