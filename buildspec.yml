@@ -24,4 +24,5 @@ phases:
       - echo "Build concluído!"
 
 artifacts:
-  files: '**/*'
+  files:
+    - '**/*'
