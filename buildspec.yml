@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Autenticando no Amazon ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 272322677686.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo "Construindo a imagem Docker..."
+      - docker build -t round6-game .
+      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game:latest
+  post_build:
+    commands:
+      - echo "Enviando imagem para o Amazon ECR..."
+      - docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game:latest
+      - echo "Build concluído!"
+
+artifacts:
+  files: '**/*'

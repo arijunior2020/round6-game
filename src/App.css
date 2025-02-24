@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700&display=swap');
+
+body {
+  background-color: #0F172A;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #E60064;
+  text-shadow: 0 0 10px rgba(230, 0, 100, 0.8);
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #E60064;
+  color: white;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+button:hover {
+  background-color: #00FF87;
+  color: #0F172A;
+  box-shadow: 0px 0px 10px #00FF87;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  gap: 10px;
+  justify-content: center;
+}
+
+.card {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  background-color: #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.flipped {
+  background-color: #00FF87;
+  box-shadow: 0px 0px 10px #00FF87;
+}
+
+.card:hover {
+  transform: scale(1.1);
+}
+
+.luz-vermelha {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 20px auto;
+  transition: 0.5s;
+}
+
+.luz-vermelha.verde {
+  background-color: #00FF87;
+  color: #0F172A;
+  box-shadow: 0px 0px 20px #00FF87;
+}
+
+.luz-vermelha.vermelha {
+  background-color: #E60064;
+  color: white;
+  box-shadow: 0px 0px 20px #E60064;
+}
