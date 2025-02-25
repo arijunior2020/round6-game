@@ -34,6 +34,7 @@ resource "aws_codepipeline" "pipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
+      version          = "1" 
       input_artifacts  = ["source_output"]
       output_artifacts = ["build_output"]
       configuration = {
@@ -50,6 +51,7 @@ resource "aws_codepipeline" "pipeline" {
       category         = "Deploy"
       owner            = "AWS"
       provider         = "ECS"
+      version          = "1"
       input_artifacts  = ["build_output"]
       configuration = {
         ClusterName = var.ecs_cluster_name
@@ -83,9 +85,9 @@ resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
 
 resource "aws_s3_bucket" "artifact_store" {
   bucket = "round6-game-artifact-store"
-  acl    = "private"
 }
 
-output "pipeline_name" {
-  value = aws_codepipeline.pipeline.name
+resource "aws_s3_bucket_acl" "artifact_store_acl" {
+  bucket = aws_s3_bucket.artifact_store.id
+  acl    = "private"
 }

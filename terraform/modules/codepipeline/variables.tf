@@ -46,3 +46,19 @@ variable "dockerhub_password" {
   description = "Docker Hub password"
   type        = string
 }
+
+variable "codebuild_project_name" {
+  description = "CodeBuild project name"
+  type        = string
+}
+
+variable "ecs_service_name" {
+  description = "ECS service name"
+  type        = string
+}
+
+variable "ecs_cluster_name" {
+  description = "ECS cluster name"
+  type        = string
+}
+

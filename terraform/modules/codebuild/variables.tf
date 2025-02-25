@@ -1,4 +1,3 @@
-variables.tf
 variable "dockerhub_username" {
   description = "Docker Hub username"
   type        = string

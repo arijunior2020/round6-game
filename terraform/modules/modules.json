@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"cloudwatch","Source":"./modules/cloudwatch","Dir":""},{"Key":"codebuild","Source":"./modules/codebuild","Dir":""},{"Key":"codepipeline","Source":"./modules/codepipeline","Dir":""},{"Key":"ecr","Source":"./modules/ecr","Dir":""},{"Key":"ecs","Source":"./modules/ecs","Dir":""}]}
