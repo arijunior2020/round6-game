@@ -47,10 +47,12 @@ module "codestar" {
 
 module "codepipeline" {
   source                = "./modules/codepipeline"
+  ecr_repository_name   = module.ecr.repository_name
   github_token          = var.github_token
   github_owner          = var.github_owner
   github_repo           = var.github_repo
   codebuild_project_name = module.codebuild.project_name
+  aws_region            = "us-east-1"
   ecs_service_name      = module.ecs.service_name
   ecs_cluster_name      = module.ecs.cluster_name
   dockerhub_username    = var.dockerhub_username

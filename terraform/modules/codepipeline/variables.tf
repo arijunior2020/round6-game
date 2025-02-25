@@ -42,3 +42,13 @@ variable "codestar_connection_arn" {
   description = "ARN of the CodeStar connection"
   type        = string
 }
+
+variable "aws_region" { 
+  description = "AWS Region"
+  type        = string
+}
+
+variable "ecr_repository_name" {
+  description = "Nome do repositório ECR onde a imagem será enviada"
+  type        = string
+}
