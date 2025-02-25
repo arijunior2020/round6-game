@@ -13,7 +13,7 @@ phases:
       - echo "Construindo a imagem Docker..."
       - docker build -t round6-game .
       - echo "Nomeando corretamente a imagem..."
-      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
+      - docker tag round6-game:latest 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game-terraform:latest
       - echo "Verificando imagens locais..."
       - docker images
 
@@ -22,7 +22,7 @@ phases:
       - echo "Enviando imagem para o Amazon ECR..."
       - docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
       - echo "Gerando arquivo imagedefinitions.json..."
-      - printf '[{"name":"round6-game-container","imageUri":"272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest"}]' > imagedefinitions.json
+      - printf '[{"name":"round6-game-container","imageUri":"272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game-terraform:latest"}]' > imagedefinitions.json
       - echo "Build concluído!"
 
 artifacts:

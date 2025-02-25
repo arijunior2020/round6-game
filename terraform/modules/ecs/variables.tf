@@ -1,19 +1,24 @@
 variable "ecr_repository_url" {
-  description = "ECR repository URL"
+  description = "The URL of the ECR repository"
   type        = string
 }
 
 variable "aws_region" {
-  description = "AWS region"
+  description = "The AWS region"
   type        = string
 }
 
 variable "subnets" {
-  description = "List of subnets"
+  description = "A list of subnets"
   type        = list(string)
 }
 
 variable "security_group" {
-  description = "Security group ID"
+  description = "The security group ID"
+  type        = string
+}
+
+variable "target_group_arn" {
+  description = "The ARN of the target group"
   type        = string
 }

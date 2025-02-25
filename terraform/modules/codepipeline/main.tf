@@ -1,6 +1,8 @@
 resource "aws_codepipeline" "pipeline" {
-  name     = "round6-game-pipeline"
+  name     = "round6-game-pipeline-terraform"
   role_arn = aws_iam_role.codepipeline_role.arn
+
+  depends_on = [var.codestar_connection_arn]
 
   artifact_store {
     location = aws_s3_bucket.artifact_store.bucket
@@ -14,14 +16,13 @@ resource "aws_codepipeline" "pipeline" {
       name             = "Source"
       category         = "Source"
       owner            = "AWS"
-      provider         = "GitHub"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        Owner      = var.github_owner
-        Repo       = var.github_repo
-        Branch     = "main"
-        OAuthToken = var.github_token
+        ConnectionArn = var.codestar_connection_arn
+        FullRepositoryId = "${var.github_owner}/${var.github_repo}"
+        BranchName      = "main"
       }
     }
   }
@@ -34,7 +35,7 @@ resource "aws_codepipeline" "pipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      version          = "1" 
+      version          = "1"
       input_artifacts  = ["source_output"]
       output_artifacts = ["build_output"]
       configuration = {
@@ -63,7 +64,7 @@ resource "aws_codepipeline" "pipeline" {
 }
 
 resource "aws_iam_role" "codepipeline_role" {
-  name = "codepipeline-role"
+  name = "codepipeline-role-terraform"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -80,14 +81,9 @@ resource "aws_iam_role" "codepipeline_role" {
 
 resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
   role       = aws_iam_role.codepipeline_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
 }
 
 resource "aws_s3_bucket" "artifact_store" {
-  bucket = "round6-game-artifact-store"
-}
-
-resource "aws_s3_bucket_acl" "artifact_store_acl" {
-  bucket = aws_s3_bucket.artifact_store.id
-  acl    = "private"
+  bucket = "round6-game-artifact-store-terraform"
 }
