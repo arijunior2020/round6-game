@@ -20,7 +20,7 @@ phases:
   post_build:
     commands:
       - echo "Enviando imagem para o Amazon ECR..."
-      - docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/unifor/round6-game:latest
+      - docker push 272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game-terraform:latest
       - echo "Gerando arquivo imagedefinitions.json..."
       - printf '[{"name":"round6-game-container","imageUri":"272322677686.dkr.ecr.us-east-1.amazonaws.com/round6-game-terraform:latest"}]' > imagedefinitions.json
       - echo "Build concluído!"
