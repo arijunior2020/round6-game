@@ -79,6 +79,7 @@ resource "aws_iam_role" "codepipeline_role" {
   })
 }
 
+
 resource "aws_iam_role_policy_attachment" "codepipeline_ecs_policy" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
@@ -92,10 +93,11 @@ resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
 resource "aws_iam_role_policy" "codepipeline_custom_policy" {
   name = "codepipeline-custom-policy"
   role = aws_iam_role.codepipeline_role.id
+
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
-      # Permissões específicas para cada serviço
+      # Permissões para acessar o S3 (artefatos da pipeline)
       {
         Effect = "Allow",
         Action = [
@@ -108,6 +110,8 @@ resource "aws_iam_role_policy" "codepipeline_custom_policy" {
           "arn:aws:s3:::round6-game-artifact-store-terraform/*"
         ]
       },
+      
+      # Permissões para CodeStar (integração com GitHub)
       {
         Effect = "Allow",
         Action = [
@@ -115,6 +119,8 @@ resource "aws_iam_role_policy" "codepipeline_custom_policy" {
         ],
         Resource = var.codestar_connection_arn
       },
+
+      # Permissões para CodeBuild
       {
         Effect = "Allow",
         Action = [
@@ -123,17 +129,41 @@ resource "aws_iam_role_policy" "codepipeline_custom_policy" {
         ],
         Resource = "arn:aws:codebuild:${var.aws_region}:${data.aws_caller_identity.current.account_id}:project/${var.codebuild_project_name}"
       },
+
+      # 🔥 **Permissões para ECS (Correção)** 🔥
       {
         Effect = "Allow",
         Action = [
           "ecs:DescribeServices",
-          "ecs:UpdateService"
+          "ecs:UpdateService",
+          "ecs:DescribeTaskDefinition",
+          "ecs:RegisterTaskDefinition",
+          "ecs:ListClusters",
+          "ecs:ListServices"
         ],
-        Resource = "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:service/${var.ecs_cluster_name}/${var.ecs_service_name}"
+        Resource = [
+          "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:service/${var.ecs_cluster_name}/${var.ecs_service_name}",
+          "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/*"
+        ]
+      },
+
+      # 🔥 **Permissões para IAM (caso precise criar novas definições de execução no ECS)** 🔥
+      {
+        Effect = "Allow",
+        Action = [
+          "iam:PassRole"
+        ],
+        Resource = "*"
+        Condition = {
+          StringEqualsIfExists = {
+            "iam:PassedToService" = "ecs-tasks.amazonaws.com"
+          }
+        }
       }
     ]
   })
 }
+
 
 ### 🚀 S3 PARA ARTEFATOS ###
 resource "aws_s3_bucket" "artifact_store" {
