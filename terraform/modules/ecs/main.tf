@@ -26,6 +26,14 @@ resource "aws_ecs_task_definition" "app" {
           value = "value"
         }
       ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/round6-game"
+          awslogs-region        = var.aws_region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
 
@@ -39,16 +47,20 @@ resource "aws_ecs_service" "app" {
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = 1
   launch_type     = "FARGATE"
+
   network_configuration {
     subnets         = var.subnets
     security_groups = [var.security_group]
-    assign_public_ip = true
+    assign_public_ip = true  
   }
+
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "app"
+    container_name   = "app"  
     container_port   = 80
   }
+
+  depends_on = [var.target_group_arn]
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
@@ -70,4 +82,9 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_ecr_access" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
