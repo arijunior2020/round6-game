@@ -164,7 +164,7 @@ terraform apply -var-file="prod.tfvars"
 
 ## Diagrama da Arquitetura
 
-![Diagrama da Arquitetura](path/to/diagram.png)
+![Diagrama da Arquitetura](img/Diagrama%20Round6.drawio.png)
 
 ## Prints das Configurações do Pipeline
 
