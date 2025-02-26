@@ -63,61 +63,6 @@ resource "aws_codepipeline" "pipeline" {
   }
 }
 
-### 🚀 ROLE DO CODEBUILD ###
-resource "aws_iam_role" "codebuild_role" {
-  name = "codebuild-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "codebuild.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "codebuild_policy" {
-  role       = aws_iam_role.codebuild_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess"
-}
-
-resource "aws_iam_role_policy" "codebuild_custom_policy" {
-  name = "codebuild-custom-policy"
-  role = aws_iam_role.codebuild_role.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
-        Resource = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.codebuild_project_name}:*"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:PutImage",
-          "ecr:InitiateLayerUpload",
-          "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload"
-        ],
-        Resource = "arn:aws:ecr:${var.aws_region}:${data.aws_caller_identity.current.account_id}:repository/${var.ecr_repository_name}"
-      }
-    ]
-  })
-}
-
-### 🚀 ROLE DO CODEPIPELINE ###
 resource "aws_iam_role" "codepipeline_role" {
   name = "codepipeline-role-terraform"
   assume_role_policy = jsonencode({

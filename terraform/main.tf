@@ -12,12 +12,14 @@ provider "aws" {
   region  = var.aws_region
 }
 
+data "aws_caller_identity" "current" {}
+
 module "vpc" {
-  source              = "./modules/vpc"
-  vpc_cidr            = var.vpc_cidr
-  public_subnets      = var.public_subnets
-  private_subnets     = var.private_subnets
-  availability_zones  = var.availability_zones
+  source             = "./modules/vpc"
+  vpc_cidr           = var.vpc_cidr
+  public_subnets     = var.public_subnets
+  private_subnets    = var.private_subnets
+  availability_zones = var.availability_zones
 }
 
 module "ecr" {
@@ -25,10 +27,13 @@ module "ecr" {
 }
 
 module "codebuild" {
-  source             = "./modules/codebuild"
-  ecr_repository_url = module.ecr.repository_url
-  dockerhub_username = var.dockerhub_username
-  dockerhub_password = var.dockerhub_password
+  source                 = "./modules/codebuild"
+  aws_region             = var.aws_region
+  ecr_repository_name    = module.ecr.repository_name
+  codebuild_project_name = "round6-game-build-terraform"
+  ecr_repository_url     = module.ecr.repository_url
+  dockerhub_username     = var.dockerhub_username
+  dockerhub_password     = var.dockerhub_password
 }
 
 module "ecs" {
@@ -46,19 +51,20 @@ module "codestar" {
 }
 
 module "codepipeline" {
-  source                = "./modules/codepipeline"
-  ecr_repository_name   = module.ecr.repository_name
-  github_token          = var.github_token
-  github_owner          = var.github_owner
-  github_repo           = var.github_repo
-  codebuild_project_name = module.codebuild.project_name
-  aws_region            = "us-east-1"
-  ecs_service_name      = module.ecs.service_name
-  ecs_cluster_name      = module.ecs.cluster_name
-  dockerhub_username    = var.dockerhub_username
-  dockerhub_password    = var.dockerhub_password
+  source                  = "./modules/codepipeline"
+  github_token            = var.github_token
+  github_owner            = var.github_owner
+  github_repo             = var.github_repo
+  aws_region              = var.aws_region
+  codebuild_project_name  = var.codebuild_project_name
+  ecr_repository_url      = module.ecr.repository_url
+  ecr_repository_name     = module.ecr.repository_name
+  ecs_service_name        = module.ecs.service_name
+  ecs_cluster_name        = module.ecs.cluster_name
+  dockerhub_username      = var.dockerhub_username
+  dockerhub_password      = var.dockerhub_password
   codestar_connection_arn = module.codestar.codestar_connection_arn
-  depends_on = [module.codestar]
+  depends_on              = [module.codebuild]
 }
 
 module "cloudwatch" {
@@ -66,10 +72,10 @@ module "cloudwatch" {
 }
 
 module "elb" {
-  source           = "./modules/elb"
-  lb_name          = "round6-game-alb"
-  tg_name          = "round6-game-tg"
-  vpc_id           = module.vpc.vpc_id
-  public_subnets   = module.vpc.public_subnets
+  source            = "./modules/elb"
+  lb_name           = "round6-game-alb"
+  tg_name           = "round6-game-tg"
+  vpc_id            = module.vpc.vpc_id
+  public_subnets    = module.vpc.public_subnets
   security_group_id = module.vpc.security_group_id
 }

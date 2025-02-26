@@ -52,3 +52,8 @@ variable "ecr_repository_name" {
   description = "Nome do repositório ECR onde a imagem será enviada"
   type        = string
 }
+
+variable "ecr_repository_url" {
+  description = "URL do repositório ECR"
+  type        = string
+}

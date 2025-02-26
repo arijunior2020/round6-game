@@ -1,14 +1,17 @@
 resource "aws_codebuild_project" "project" {
-  name          = "round6-game-build-terraform"
+  name          = var.codebuild_project_name
   service_role  = aws_iam_role.codebuild_role.arn
+
   artifacts {
     type = "CODEPIPELINE"
   }
+
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
     image                       = "aws/codebuild/standard:4.0"
     type                        = "LINUX_CONTAINER"
     privileged_mode             = true
+
     environment_variable {
       name  = "DOCKERHUB_USERNAME"
       value = var.dockerhub_username
@@ -18,14 +21,17 @@ resource "aws_codebuild_project" "project" {
       value = var.dockerhub_password
     }
   }
+
   source {
-    type            = "CODEPIPELINE"
-    buildspec       = file("${path.module}/buildspec.yml")
+    type      = "CODEPIPELINE"
+    buildspec = file("${path.module}/buildspec.yml")
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "codebuild_role" {
-  name = "codebuild-role"
+  name = "codebuild-role-terraform"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -40,7 +46,54 @@ resource "aws_iam_role" "codebuild_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "codebuild_policy" {
+resource "aws_iam_role_policy" "codebuild_custom_policy" {
+  name = "codebuild-custom-policy-terraform"
+  role = aws_iam_role.codebuild_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      # Permissões para S3 (acesso ao bucket de artefatos)
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:PutObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          "arn:aws:s3:::round6-game-artifact-store-terraform",
+          "arn:aws:s3:::round6-game-artifact-store-terraform/*"
+        ]
+      },
+      
+      # Permissões para logs do CloudWatch
+      {
+        Effect = "Allow",
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ],
+        Resource = [
+          "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.codebuild_project_name}",
+          "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.codebuild_project_name}:*"
+        ]
+      }
+    ]
+  })
+}
+
+
+resource "aws_iam_role_policy_attachment" "codebuild_policy_ecr" {
   role       = aws_iam_role.codebuild_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild_policy_codebuild" {
+  role       = aws_iam_role.codebuild_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess"
 }
