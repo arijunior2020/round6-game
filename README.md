@@ -2,35 +2,36 @@
 
 ## Equipe
 - Arimatéia Júnior  - Matrícula: 2417061
-- Karime Linhares   - Matrícula: 
+- Karime Linhares   - Matrícula: 2416877
 - Bruno             - Matrícula: 2417061
 - Pedro             - Matrícula: 2417061
 - Anderson          - Matrícula: 2417061
 
 ## Descrição do Projeto
 
-Este projeto é uma aplicação simples que simula o jogo Round 6. A aplicação está implantada via IaC (Infrastructure as Code) utilizando Terraform na AWS. Este projeto foi desenvolvido como atividade final da disicplina de Computação em Nuvem.
+Este projeto é uma aplicação que simula o jogo Round 6. 
+A aplicação está implantada via IaC (Infrastructure as Code) utilizando Terraform na AWS. Este projeto foi desenvolvido como atividade final da disicplina de Computação em Nuvem da Pós-graduação em Engenharia de Software com DevOps.
 
 ### Requisitos do Projeto
 
-1. **Código-Fonte**: Utilizamos GitHub, segue link: [https://github.com/arijunior2020/round6-game]
-2. **Construção da Aplicação**: Utilizamos AWS CodeBuild para compilar e criar a imagem Docker. Criamos dois arquivos `buildspec.yml` um na raiz que criar o build sem o uso do terraform (Estrutura que criamos sem uso do terraform) e criamos outro dentro de `codebuild`que esse é utilizado no pipeline do terraform.
-3. **Registro da Imagem**: Armazenamos a imagem no Amazon ECR.
-4. **Orquestração**: Utilizamos AWS ECS (Fargate) para implantar o container da aplicação.
-5. **Implantação Automatizada**: Utilize AWS CodePipeline para automatizar o fluxo CI/CD.
-6. **Monitoramento**: Configuramos CloudWatch Logs para armazenar logs da aplicação.
+1. **Código-Fonte**: Está disponível no link: [https://github.com/arijunior2020/round6-game]
+2. **Construção da Aplicação**: Foi utilizado AWS CodeBuild para compilar e criar a imagem Docker. Há dois arquivos `buildspec.yml`: um na raiz que gera o build sem o uso do terraform (para a estrutura criada manualmente, sem o terraform) e outro dentro de `codebuild`, utilizado no pipeline do terraform.
+3. **Registro da Imagem**: A imagem é armazenada no Amazon ECR.
+4. **Orquestração**: Foi utilizado o AWS ECS (Fargate) para implantar o container da aplicação.
+5. **Implantação Automatizada**: O AWS CodePipeline automatiza o fluxo CI/CD.
+6. **Monitoramento**: CloudWatch Logs foi configurado para armazenar logs da aplicação.
 
 ## Pipeline CI/CD na AWS com Terraform
 
-O Objetivo é implementar toda infraestrutura e pipeline via Infraestrutura como código (IaC), no caso utilizamos Terraform como ferramenta.
+O objetivo é implementar toda a infraestrutura e pipeline via Infraestrutura como Código (IaC), tendo o Terraform como ferramenta.
 
 ### Requisitos da Automação
 
-1. Criamos os arquivos `.tf` organizados (ex: `main.tf`, `variables.tf`, `outputs.tf`).
-2. Utilizamos módulos para organizar os recursos (ex: cloudwatch, cloudbuild, codepipeline, codestar, ecr, ecs, elb e vpc).
-3. Aplicamos as boas práticas de reutilização e versionamento.
-4. Testamos a criação e destruição da infraestrutura com os comandos (`terraform apply` e `terraform destroy`).
-5. A reutilização do código Terraform em diferentes ambientes pode ser feita de forma eficiente através da parametrização de variáveis e do uso de workspaces do Terraform. No nosso caso utilizamos um arquivo terraform.tfvars para guardar as variaveis de ambiente que são referenciadas dentros dos arquivos dos módulos, lembrando que esse arquivo não é commitado para o repositório, para utilização de demais ambientes, exemplo:
+1. Foi criado os arquivos `.tf` organizados (ex: `main.tf`, `variables.tf`, `outputs.tf`).
+2. Módulos foram adotados para organizar os recursos (ex: cloudwatch, cloudbuild, codepipeline, codestar, ecr, ecs, elb e vpc).
+3. Foram aplicadas as boas práticas de reutilização e versionamento.
+4. A criação e destruição da infraestrutura foi validada com os comandos (`terraform apply` e `terraform destroy`).
+5. A reutilização do código Terraform em diferentes ambientes pode ser feita de forma eficiente através da parametrização de variáveis e do uso de workspaces do Terraform. No nosso caso, um arquivo `terraform.tfvars` armazena as variaveis de ambiente que são referenciadas dentros dos arquivos dos módulos. Vale lembrar, que esse arquivo não é commitado para o repositório, para utilização de demais ambientes, exemplo:
 ```
    terraform/
 ├── envs/
