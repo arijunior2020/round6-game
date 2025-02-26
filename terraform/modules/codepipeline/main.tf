@@ -196,6 +196,10 @@ resource "aws_iam_role_policy" "codepipeline_custom_policy" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "codepipeline_codestar_policy" {
+  role       = aws_iam_role.codepipeline_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodeStarFullAccess"
+}
 
 ### 🚀 S3 PARA ARTEFATOS ###
 resource "aws_s3_bucket" "artifact_store" {
