@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "app" {
 
   container_definitions = jsonencode([
     {
-      name      = "app"
+      name      = "round6-game-container"
       image     = "${var.ecr_repository_url}:latest"
       essential = true
       portMappings = [
@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "app" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = "/ecs/round6-game"
+          awslogs-group         = "/ecs/round6-game-terraform"
           awslogs-region        = var.aws_region
           awslogs-stream-prefix = "ecs"
         }
@@ -56,7 +56,7 @@ resource "aws_ecs_service" "app" {
 
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "app"  
+    container_name   = "round6-game-container"  
     container_port   = 80
   }
 
@@ -77,6 +77,11 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_logs_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
