@@ -90,6 +90,13 @@ resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
 }
 
+resource "aws_iam_policy_attachment" "ecs_full_access" {
+  name       = "ecs-full-access-attachment"
+  roles      = [aws_iam_role.codepipeline_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+}
+
+
 resource "aws_iam_role_policy" "codepipeline_custom_policy" {
   name = "codepipeline-custom-policy"
   role = aws_iam_role.codepipeline_role.id
