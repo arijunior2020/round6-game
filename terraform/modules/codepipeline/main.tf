@@ -80,7 +80,7 @@ resource "aws_iam_role" "codepipeline_role" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecs-task-execution-role-terraform"
+  name = "codepipeline-task-execution-role-terraform"
   
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
