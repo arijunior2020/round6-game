@@ -1,7 +1,9 @@
+# Criação do recurso de VPC
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 }
 
+# Criação do recurso de Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -10,13 +12,15 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+# Criação do recurso de Elastic IP
 resource "aws_eip" "nat" {
   domain = "vpc"
 }
 
+# Criação do recurso de NAT Gateway
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id  # O NAT Gateway deve ficar em uma subnet pública
+  subnet_id     = aws_subnet.public[0].id 
 
   tags = {
     Name = "nat-gateway"
@@ -25,6 +29,7 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.igw]
 }
 
+# Criação do recurso de Route Table
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
@@ -38,12 +43,14 @@ resource "aws_route_table" "private" {
   }
 }
 
+# Criação do recurso de Route Table Association
 resource "aws_route_table_association" "private" {
   count          = length(var.private_subnets)
   subnet_id      = element(aws_subnet.private[*].id, count.index)
   route_table_id = aws_route_table.private.id
 }
 
+# Criação do recurso de Route Table
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -57,12 +64,14 @@ resource "aws_route_table" "public" {
   }
 }
 
+# Criação do recurso de Route Table Association
 resource "aws_route_table_association" "public" {
   count          = length(var.public_subnets)
   subnet_id      = element(aws_subnet.public[*].id, count.index)
   route_table_id = aws_route_table.public.id
 }
 
+# Criação do recurso de Subnet pública
 resource "aws_subnet" "public" {
   count                   = length(var.public_subnets)
   vpc_id                  = aws_vpc.main.id
@@ -75,6 +84,7 @@ resource "aws_subnet" "public" {
   }
 }
 
+# Criação do recurso de Subnet privada
 resource "aws_subnet" "private" {
   count             = length(var.private_subnets)
   vpc_id            = aws_vpc.main.id
@@ -86,6 +96,7 @@ resource "aws_subnet" "private" {
   }
 }
 
+# Criação do recurso de Security Group
 resource "aws_security_group" "main" {
   vpc_id = aws_vpc.main.id
 

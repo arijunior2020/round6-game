@@ -1,1 +1,1 @@
-# No variables needed for CloudWatch module
+# Sem variáveis para o módulo

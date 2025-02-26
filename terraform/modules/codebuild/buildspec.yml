@@ -1,3 +1,4 @@
+# Description: Arquivo de configuração do CodeBuild
 version: 0.2
 
 phases:

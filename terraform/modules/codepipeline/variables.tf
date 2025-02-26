@@ -1,3 +1,4 @@
+# Arquivo de variáveis do módulo CodePipeline
 variable "github_owner" {
   description = "GitHub owner of the repository"
   type        = string

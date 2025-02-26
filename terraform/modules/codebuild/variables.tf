@@ -1,3 +1,4 @@
+# Arquivo de variáveis do módulo CodeBuild
 variable "dockerhub_username" {
   description = "Docker Hub username"
   type        = string

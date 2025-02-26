@@ -1,3 +1,4 @@
+# Arquivo responsável por definir as variáveis que serão utilizadas no módulo ECS
 variable "ecr_repository_url" {
   description = "The URL of the ECR repository"
   type        = string

@@ -1,3 +1,4 @@
+# Definição dos requisitos do provider
 terraform {
   required_providers {
     aws = {
@@ -7,6 +8,7 @@ terraform {
   }
 }
 
+# Definição do provider
 provider "aws" {
   profile = "aws-pipeline"
   region  = var.aws_region
@@ -14,6 +16,7 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# Definição dos módulos
 module "vpc" {
   source             = "./modules/vpc"
   vpc_cidr           = var.vpc_cidr

@@ -1,5 +1,8 @@
+# Arquivo principal do módulo CodePipeline
+
 data "aws_caller_identity" "current" {}
 
+# Recurso CodePipeline
 resource "aws_codepipeline" "pipeline" {
   name     = "round6-game-pipeline-terraform"
   role_arn = aws_iam_role.codepipeline_role.arn
@@ -63,6 +66,7 @@ resource "aws_codepipeline" "pipeline" {
   }
 }
 
+# Recurso IAM Role para o CodePipeline
 resource "aws_iam_role" "codepipeline_role" {
   name = "codepipeline-role-terraform"
   assume_role_policy = jsonencode({
@@ -79,6 +83,7 @@ resource "aws_iam_role" "codepipeline_role" {
   })
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "codepipeline-task-execution-role-terraform"
   
@@ -94,34 +99,38 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy_attachment" "ecs_ecr_access" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy_attachment" "codepipeline_ecs_policy" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy_attachment" "codepipeline_policy" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_policy_attachment" "ecs_full_access" {
   name       = "ecs-full-access-attachment"
   roles      = [aws_iam_role.codepipeline_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
-
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy" "codepipeline_custom_policy" {
   name = "codepipeline-custom-policy"
   role = aws_iam_role.codepipeline_role.id
@@ -196,12 +205,13 @@ resource "aws_iam_role_policy" "codepipeline_custom_policy" {
   })
 }
 
+# Anexando políticas ao IAM Role do CodePipeline
 resource "aws_iam_role_policy_attachment" "codepipeline_codestar_policy" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodeStarFullAccess"
 }
 
-### 🚀 S3 PARA ARTEFATOS ###
+# Criando bucket S3 para armazenar os artefatos da pipeline
 resource "aws_s3_bucket" "artifact_store" {
   bucket = "round6-game-artifact-store-terraform"
 }

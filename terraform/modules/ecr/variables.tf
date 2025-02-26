@@ -1,1 +1,1 @@
-# No variables needed for ECR module
+# Arquivo de variáveis do módulo ECR

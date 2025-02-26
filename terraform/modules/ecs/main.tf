@@ -1,3 +1,4 @@
+# Criação do cluster ECS, definição da task e do serviço ECS
 resource "aws_ecs_cluster" "cluster" {
   name = "round6-game-cluster-terraform"
 }
@@ -49,9 +50,9 @@ resource "aws_ecs_service" "app" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = var.subnets  # ✅ Subnets privadas
+    subnets         = var.subnets  
     security_groups = [var.security_group]
-    assign_public_ip = false  # ❌ Desativando IP público
+    assign_public_ip = false
   }
 
   load_balancer {
@@ -63,6 +64,7 @@ resource "aws_ecs_service" "app" {
   depends_on = [var.target_group_arn]
 }
 
+# Recurso IAM Role para a execução da task ECS
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecs-task-execution-role-terraform"
   assume_role_policy = jsonencode({
@@ -79,16 +81,19 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
+# Anexando políticas ao IAM Role da task ECS
 resource "aws_iam_role_policy_attachment" "ecs_logs_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
+# Anexando políticas ao IAM Role da task ECS
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Anexando políticas ao IAM Role da task ECS
 resource "aws_iam_role_policy_attachment" "ecs_ecr_access" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
