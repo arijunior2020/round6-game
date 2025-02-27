@@ -82,7 +82,18 @@ terraform apply -var-file="prod.tfvars"
 ### Entregaveis
 
 - Descrição do fluxo CI/CD e diagrama da arquitetura.
+Passo a Passo do Fluxo CI/CD
+1.	Commit no GitHub: O desenvolvedor faz um commit no repositório GitHub.
+2.	AWS CodePipeline: Detecta o commit e inicia o pipeline.
+3.	AWS CodeStar: Conecta o CodePipeline ao repositório GitHub.
+4.	AWS CodeBuild: Compila o código e cria a imagem Docker.
+5.	Amazon ECR: Armazena a imagem Docker criada.
+6.	AWS ECS (Fargate): Implanta a imagem Docker em contêineres.
+7.	Elastic Load Balancer (ELB): Distribui o tráfego para os contêineres ECS.
+8.	Amazon CloudWatch Logs: Coleta e armazena os logs da aplicação.
+
 - Print das configurações do pipeline.
+- 
 - Justificativa das escolhas dos serviços AWS.
 
 ### Entrega
