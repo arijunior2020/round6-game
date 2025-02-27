@@ -175,7 +175,7 @@ Passo a Passo do Fluxo CI/CD
 
 ## Diagrama da Arquitetura
 
-![Diagrama da Arquitetura](img/Diagrama%20Round6.drawio.png)
+![Diagrama da Arquitetura](img/Diagrama%20Round6%20Atualizado.drawio.png)
 
 ## Prints das Configurações do Pipeline
 
