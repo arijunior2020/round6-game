@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700&display=swap');
+
+.app-container {
+	display: flex;
+	overflow: hidden;
+	position: relative;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	min-height: 100vh;
+	background: #1f1f1f;
+	font-family: 'Orbitron', sans-serif;
+}
+
+.pattern-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	opacity: 0.2;
+}
+
+.game-container {
+	width: 100%;
+	max-width: 60rem;
+	margin: 0 auto;
+	padding: 4rem 2rem 2rem;
+	position: relative;
+	z-index: 10;
+}
+
+.game-title {
+	font-weight: bold;
+	color: #ff0080;
+	text-align: center;
+	font-family: 'Orbitron', sans-serif;
+	font-size: 2.5rem;
+	color: #e60064;
+	text-shadow: 0 0 10px rgba(230, 0, 100, 0.8);
+	margin-bottom: 20px;
+}
+
+.buttons-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.game-running-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.game-running-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+button {
+	background-color: #e60064;
+	color: white;
+	font-size: 1.5rem;
+	padding: 10px 20px;
+	margin: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+	font-family: 'Bebas Neue', sans-serif;
+}
+
+button:hover {
+	background-color: #00ff87;
+	color: #0f172a;
+	box-shadow: 0px 0px 10px #00ff87;
+}
+
+.return {
+	margin-top: 10rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, 100px);
+	gap: 10px;
+	justify-content: center;
+}
+
+.card {
+	width: 100px;
+	height: 100px;
+	border-radius: 8px;
+	background-color: #1e293b;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.card img {
+	width: 80%;
+	height: 80%;
+	object-fit: contain;
+}
+
+.flipped {
+	background-color: #00ff87;
+	box-shadow: 0px 0px 10px #00ff87;
+}
+
+.card:hover {
+	transform: scale(1.1);
+}
+
+.luz-vermelha {
+	font-size: 2rem;
+	font-weight: bold;
+	padding: 20px;
+	border-radius: 10px;
+	display: inline-block;
+	margin: 20px auto;
+	transition: 0.5s;
+}
+
+.luz-vermelha.verde {
+	background-color: #00ff87;
+	color: #0f172a;
+	box-shadow: 0px 0px 20px #00ff87;
+}
+
+.luz-vermelha.vermelha {
+	background-color: #e60064;
+	color: white;
+	box-shadow: 0px 0px 20px #e60064;
+}
+
+h2 {
+	color: #ffffff;
+	display: flex;
+	justify-content: center;
+}
+
+.message {
+	font-size: 2.25rem;
+	line-height: 2.5rem;
+	font-weight: 300;
+	color: #ff0080;
+}
+
+.animate-fade-in {
+	animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700&display=swap');
+
+
+
+body {
+	color: white;
+	font-family: 'Orbitron', sans-serif;
+	text-align: center;
+	min-height: 100vh;
+	width: 100%;
+	background-color: #1f1f1f;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	overflow: hidden;
+	position: relative;
+}
+
+h1 {
+	font-size: 2.5rem;
+	color: #e60064;
+	text-shadow: 0 0 10px rgba(230, 0, 100, 0.8);
+	margin-bottom: 20px;
+}
+
+button {
+	background-color: #e60064;
+	color: white;
+	font-size: 1.5rem;
+	padding: 10px 20px;
+	margin: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+	font-family: 'Bebas Neue', sans-serif;
+}
+
+button:hover {
+	background-color: #00ff87;
+	color: #0f172a;
+	box-shadow: 0px 0px 10px #00ff87;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, 100px);
+	gap: 10px;
+	justify-content: center;
+}
+
+.card {
+	width: 100px;
+	height: 100px;
+	border-radius: 8px;
+	background-color: #1e293b;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.card img {
+	width: 80%;
+	height: 80%;
+	object-fit: contain;
+}
+
+.flipped {
+	background-color: #00ff87;
+	box-shadow: 0px 0px 10px #00ff87;
+}
+
+.card:hover {
+	transform: scale(1.1);
+}
+
+.luz-vermelha {
+	font-size: 2rem;
+	font-weight: bold;
+	padding: 20px;
+	border-radius: 10px;
+	display: inline-block;
+	margin: 20px auto;
+	transition: 0.5s;
+}
+
+.luz-vermelha.verde {
+	background-color: #00ff87;
+	color: #0f172a;
+	box-shadow: 0px 0px 20px #00ff87;
+}
+
+.luz-vermelha.vermelha {
+	background-color: #e60064;
+	color: white;
+	box-shadow: 0px 0px 20px #e60064;
+} */

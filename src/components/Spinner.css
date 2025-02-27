@@ -1,0 +1,40 @@
+.container {
+	display: flex;
+	overflow: hidden;
+	position: relative;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	min-height: 100vh;
+	background: #1f1f1f;
+	font-family: 'Orbitron', sans-serif;
+}
+
+.spinner-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	gap: 2rem;
+}
+
+.icon-spinner {
+	width: 4rem;
+	height: 4rem;
+	animation: bounce 1s infinite ease-in-out;
+	color: #ff0080;
+}
+
+@keyframes bounce {
+	0%,
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	50% {
+		transform: translateY(-25%);
+		opacity: 0.5;
+	}
+}
